@@ -19,6 +19,15 @@
 def triangle(a, b, c):
   lengths = {a,b,c}
   tri = ""
+  if 0 in lengths:
+    raise TriangleError()
+  elif (a + b) < c:
+    raise TriangleError()
+  elif (b + c) < a:
+    raise TriangleError()
+  elif (c+a) < b:
+    raise TriangleError()
+
   if len(lengths) == 1: 
     return  'equilateral'
   elif len(lengths) == 2:
