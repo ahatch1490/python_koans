@@ -19,13 +19,11 @@
 def triangle(a, b, c):
   lengths = {a,b,c}
   tri = ""
-  if 0 in lengths:
+  if min(lengths) <= 0:
     raise TriangleError()
-  elif (a + b) < c:
-    raise TriangleError()
-  elif (b + c) < a:
-    raise TriangleError()
-  elif (c+a) < b:
+  
+  sides  =  sorted([a,b,c])
+  if (sides[0] + sides[1] ) < sides[2]:
     raise TriangleError()
 
   if len(lengths) == 1: 
