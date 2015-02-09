@@ -20,25 +20,61 @@ from runner.koan import *
 
 class Proxy:
     def __init__(self, target_object):
-        # WRITE CODE HERE
+      object.__setattr__(self,"_messages",[])
+      object.__setattr__(self,"_number_of_times_called",{})
+      #initialize '_obj' attribute last. Trust me on this!
+      object.__setattr__(self,"_obj",target_object)
+    
+    def messages(self):
+      return self._messages
+    
+    def was_called(self,name):
+      return name in self._messages 
+    def number_of_times_called(self,name):
+      if name in self._number_of_times_called:
+        return self._number_of_times_called[name]
+      else:
+        return 0 
 
-        #initialize '_obj' attribute last. Trust me on this!
-        self._obj = target_object
+    def __getattr__(self,name):
+      
+      if name == 'messages':
+        return self.messages()
+      elif name == 'was_called':
+        return self.was_called(name)
+      elif name == 'number_of_times_called':
+        return self.number_of_timese_called(name)
+      else:
+        self._messages.append(name)
+        if name in self._number_of_times_called:
+          self._number_of_times_called[name] += 1
+        else:
+          self._number_of_times_called[name] = 1
+        
+        obj = object.__getattribute__(self,"_obj")
+        return object.__getattribute__(obj,name)
 
-    # WRITE CODE HERE
+    def __setattr__(self,name,value):
+      self._messages.append(name)
+      if name in self._number_of_times_called:
+        self._number_of_times_called[name] += 1
+      else:
+        self._number_of_times_called[name] = 1
 
+      obj = object.__getattribute__(self,"_obj")
+      object.__setattr__(obj,name,value)
+   
 # The proxy object should pass the following Koan:
 #
 class AboutProxyObjectProject(Koan):
     def test_proxy_method_returns_wrapped_object(self):
         # NOTE: The Television class is defined below
         tv = Proxy(Television())
-
         self.assertTrue(isinstance(tv, Proxy))
 
     def test_tv_methods_still_perform_their_function(self):
         tv = Proxy(Television())
-
+        
         tv.channel = 10
         tv.power()
 
@@ -66,7 +102,7 @@ class AboutProxyObjectProject(Koan):
 
         tv.power()
         tv.power()
-
+        
         self.assertTrue(tv.was_called('power'))
         self.assertFalse(tv.was_called('channel'))
 
