@@ -1,5 +1,5 @@
 ============
-My Finished Python Koans
+My Finished Python 3 Koans
 ============
 
 .. image:: https://travis-ci.org/gregmalcolm/python_koans.png?branch=master
